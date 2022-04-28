@@ -8,17 +8,20 @@ app.use(cors());
 app.use(express.json()); //req.body
 
 //ROUTES//
-
+app.get('/', (req, res) => {
+  res.status(200).send('Hello World!');
+})
 //create a todo
 
 app.post("/todos", async (req, res) => {
   try {
+    console.log(req.body);
     const { description } = req.body;
-    const newTodo = await pool.query(
-      "INSERT INTO todo (description) VALUES($1) RETURNING *",
+    const newTodo =  pool.query(
+      "INSERT INTO todo (description) VALUES ($1)",
       [description]
     );
-
+    console.log(newTodo.rows[0]);
     res.json(newTodo.rows[0]);
   } catch (err) {
     console.error(err.message);
@@ -29,6 +32,7 @@ app.post("/todos", async (req, res) => {
 
 app.get("/todos", async (req, res) => {
   try {
+    console.log(req.body);
     const allTodos = await pool.query("SELECT * FROM todo");
     res.json(allTodos.rows);
   } catch (err) {
@@ -82,6 +86,6 @@ app.delete("/todos/:id", async (req, res) => {
   }
 });
 
-app.listen(5000, () => {
-  console.log("server has started on port 5000");
+app.listen(3001, () => {
+  console.log("server has started on port 3001");
 });
