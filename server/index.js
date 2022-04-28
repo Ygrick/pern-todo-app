@@ -15,14 +15,15 @@ app.get('/', (req, res) => {
 
 app.post("/todos", async (req, res) => {
   try {
-    console.log(req.body);
+    
     const { description } = req.body;
+    const { admin } = req.body;
+    isadmin = admin;
+    // console.log(description);
+    // console.log(admin);
     const newTodo =  pool.query(
-      "INSERT INTO todo (description) VALUES ($1)",
-      [description]
+      "INSERT INTO todo (description, admin) VALUES ($1, $2)", [description, admin]
     );
-    console.log(newTodo.rows[0]);
-    res.json(newTodo.rows[0]);
   } catch (err) {
     console.error(err.message);
   }
@@ -30,16 +31,22 @@ app.post("/todos", async (req, res) => {
 
 //get all todos
 
-app.get("/todos", async (req, res) => {
+app.get("/todos1", async (req, res) => {
   try {
-    console.log(req.body);
     const allTodos = await pool.query("SELECT * FROM todo");
     res.json(allTodos.rows);
   } catch (err) {
     console.error(err.message);
   }
 });
-
+app.get("/todos2", async (req, res) => {
+  try {
+    const allTodos = await pool.query("SELECT * FROM todo where admin = 'user'");
+    res.json(allTodos.rows);
+  } catch (err) {
+    console.error(err.message);
+  }
+});
 //get a todo
 
 app.get("/todos/:id", async (req, res) => {
@@ -48,8 +55,6 @@ app.get("/todos/:id", async (req, res) => {
     const todo = await pool.query("SELECT * FROM todo WHERE todo_id = $1", [
       id
     ]);
-
-    res.json(todo.rows[0]);
   } catch (err) {
     console.error(err.message);
   }

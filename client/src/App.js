@@ -5,11 +5,13 @@ import "./App.css";
 
 import InputTodo from "./components/InputTodo";
 import ListTodos from "./components/ListTodos";
+import LoginPage from "./components/Login/LoginPage";
 
 function App() {
   return (
     <Fragment>
       <div className="container">
+        <LoginPage />
         <InputTodo />
         <ListTodos />
       </div>
